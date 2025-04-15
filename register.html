@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Регистрация — Acura Changer</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="auth-page">
+  <div class="auth-container">
+    <h2>Регистрация</h2>
+    <form id="registerForm">
+      <input type="text" id="username" placeholder="Логин" required>
+      <input type="email" id="email" placeholder="Email" required>
+      <input type="password" id="password" placeholder="Пароль" required>
+      <input type="password" id="confirmPassword" placeholder="Повторите пароль" required>
+      <p id="error-message" style="color: #f04e4e; display: none;"></p>
+      <button type="submit">Зарегистрироваться</button>
+    </form>
+    <p>Уже есть аккаунт? <a href="login.html">Войти</a></p>
+  </div>
+
+  <script>
+    const form = document.getElementById('registerForm');
+    const username = document.getElementById('username');
+    const email = document.getElementById('email');
+    const password = document.getElementById('password');
+    const confirmPassword = document.getElementById('confirmPassword');
+    const errorMessage = document.getElementById('error-message');
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      const users = JSON.parse(localStorage.getItem('users')) || {};
+
+      if (users[username.value]) {
+        errorMessage.textContent = 'Пользователь с таким логином уже существует.';
+        errorMessage.style.display = 'block';
+        return;
+      }
+
+      if (password.value !== confirmPassword.value) {
+        errorMessage.textContent = 'Пароли не совпадают.';
+        errorMessage.style.display = 'block';
+        return;
+      }
+
+      users[username.value] = {
+        email: email.value,
+        password: password.value
+      };
+
+      localStorage.setItem('users', JSON.stringify(users));
+      localStorage.setItem('email', email.value);
+      localStorage.setItem('regDate', new Date().toLocaleDateString('ru-RU'));
+      localStorage.setItem('currentUser', username.value);
+
+      errorMessage.style.display = 'none';
+      alert('Регистрация успешна!');
+      window.location.href = 'login.html';
+    });
+  </script>
+</body>
+</html>
